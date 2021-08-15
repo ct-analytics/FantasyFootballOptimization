@@ -29,47 +29,28 @@ function(input, output, session) {
       select(player_name,team,status,position,eligible_pos) %>% 
       arrange(position)
   })
-  sim_data_team <- reactive({
-    # progress$set(value = 2)
-    
-    if (is.null(v$roster_data)) return()
-    espn_sim <- ff_simulate(conn = conn, 
-                            n_seasons = input$number_of_seasons, 
-                            n_weeks = input$weeks_in_season,
-                            injury_model = "simple",
-                            best_ball = T,
-                            seed = 4321)
-    # v$sim_data <- espn_sim$summary_season
-    # progress$set(value = 3)
-    espn_sim$summary_season %>% 
-      filter(franchise_name==input$team_name)
-    
-  })
-  sim_data_week <- reactive({
-    if (is.null(v$roster_data)) return()
-    espn_sim <- ff_simulate(conn = conn, 
-                            n_seasons = input$number_of_seasons, 
-                            n_weeks = input$weeks_in_season,
-                            injury_model = "simple",
-                            best_ball = T,
-                            seed = 4321)
-    # v$sim_data <- espn_sim$summary_season
-    
-    espn_sim$summary_week %>% 
-      filter(franchise_name==input$team_name)
-  })
-  
-  output$plot_expectedwins <- renderPlot({
+  sim_data <- reactive({
     progress <- Progress$new(session, min=1, max=4)
     on.exit(progress$close())
     
     progress$set(message = 'Running simulation...',
                  detail = 'this may take a while...')
     
-    if (is.null(sim_data_team())) return()
-    # progress$set(value = 1)
+    if (is.null(v$roster_data)) return()
+    ff_simulate(conn = conn, 
+                n_seasons = input$number_of_seasons, 
+                n_weeks = input$weeks_in_season,
+                injury_model = "simple",
+                best_ball = T,
+                seed = 4321)
     
-    g <- sim_data_team() %>%
+  })
+  
+  output$plot_expectedwins <- renderPlot({
+    if (is.null(sim_data())) return()
+    
+    g <- sim_data()$summary_season %>%
+      filter(franchise_name==input$team_name) %>%
       select(franchise_name, h2h_wins) %>%
       ggplot(aes(x=h2h_wins)) +
       geom_histogram(stat="count") +
@@ -80,8 +61,7 @@ function(input, output, session) {
            subtitle = paste("Expected number of wins after simulating ",input$number_of_seasons," ",input$weeks_in_season,"-week seasons.",sep=""),
            caption = paste("ffsimulator R package |",rankings_stamp(today()))) +
       theme_hc()
-    
-    # progress$set(value = 3)
+
     return(g)
   })
   
@@ -103,15 +83,10 @@ function(input, output, session) {
   })
   
   output$plot_weekly_points <- renderPlot({
-    progress <- Progress$new(session, min=1, max=4)
-    on.exit(progress$close())
+    if (is.null(sim_data())) return()
     
-    progress$set(message = 'Running simulation...',
-                 detail = 'this may take a while...')
-    
-    if (is.null(sim_data_week())) return()
-    
-    sim_data_week() %>%
+    sim_data()$summary_week %>%
+      filter(franchise_name==input$team_name) %>%
       select(franchise_name,team_score,result) %>%
       ggplot(aes(y=result, x=team_score, fill=result, color=result)) +
       geom_jitter(color="black", size=2, alpha=0.2) +
