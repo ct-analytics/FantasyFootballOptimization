@@ -46,28 +46,9 @@ function(input, output, session) {
     
   })
   
-  output$plot_expectedwins <- renderPlot({
-    if (is.null(sim_data())) return()
-    
-    g <- sim_data()$summary_season %>%
-      filter(franchise_name==input$team_name) %>%
-      select(franchise_name, h2h_wins) %>%
-      ggplot(aes(x=h2h_wins)) +
-      geom_histogram(stat="count") +
-      scale_x_continuous(breaks = seq(0,14), limits = c(0,14)) +
-      xlab("Head to Head Wins in a Season") +
-      ylab("Number of Simulated Seasons") +
-      labs(title = paste("Season win totals for",input$team_name),
-           subtitle = paste("Expected number of wins after simulating ",input$number_of_seasons," ",input$weeks_in_season,"-week seasons.",sep=""),
-           caption = paste("ffsimulator R package |",rankings_stamp(today()))) +
-      theme_hc()
-
-    return(g)
-  })
-  
   output$table_roster <- renderDataTable({
     if (is.null(team_data())) return()
-
+    
     datatable(team_data(),
               rownames = FALSE,
               colnames = c("Name", "Team", "Status", "Position", "Eligible Positions"),
@@ -82,10 +63,24 @@ function(input, output, session) {
     )
   })
   
-  output$plot_weekly_points <- renderPlot({
+  output$plot_sim <- renderPlot({
     if (is.null(sim_data())) return()
+    df <- sim_data()
     
-    sim_data()$summary_week %>%
+    p1 <- df$summary_season %>%
+      filter(franchise_name==input$team_name) %>%
+      select(franchise_name, h2h_wins) %>%
+      ggplot(aes(x=h2h_wins)) +
+      geom_histogram(stat="count") +
+      scale_x_continuous(breaks = seq(0,14), limits = c(0,14)) +
+      xlab("Head to Head Wins in a Season") +
+      ylab("Number of Simulated Seasons") +
+      labs(title = paste("Season win totals for",input$team_name),
+           subtitle = paste("Expected number of wins after simulating ",input$number_of_seasons," ",input$weeks_in_season,"-week seasons.",sep=""),
+           caption = paste("ffsimulator R package |",rankings_stamp(today()))) +
+      theme_hc()
+
+    p2 <- df$summary_week %>%
       filter(franchise_name==input$team_name) %>%
       select(franchise_name,team_score,result) %>%
       ggplot(aes(y=result, x=team_score, fill=result, color=result)) +
@@ -98,5 +93,10 @@ function(input, output, session) {
            caption = paste("ffsimulator R package |",rankings_stamp(today()))) +
       theme_hc() +
       theme(legend.position = "none")
+    
+    p3 <- autoplot(df, type = "rank")
+    
+    p <- (p1 / p2) + p3
+    return(p)
   })
 }

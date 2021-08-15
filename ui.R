@@ -53,8 +53,7 @@ navbarPage("Fantasy Football Season Simulator",
                                                 step=1) %>% disabled()
                       ),
                       mainPanel(
-                        plotOutput("plot_expectedwins"),
-                        plotOutput("plot_weekly_points")
+                        plotOutput("plot_sim")
                       )
                     )),
            tabPanel("About", 
