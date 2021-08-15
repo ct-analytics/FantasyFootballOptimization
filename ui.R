@@ -1,8 +1,9 @@
 
 navbarPage("Fantasy Football Season Simulator",
-           useShinyjs(),
+           
            tabPanel("Roster Data",
-                    fluidPage(theme = shinytheme("flatly")),
+                    fluidPage(theme = shinytheme("flatly"),
+                              useShinyjs()),
                     tags$head(
                       tags$style(HTML(".shiny-output-error-validation{color: red;}"))),
                     pageWithSidebar(
