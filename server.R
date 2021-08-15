@@ -30,6 +30,8 @@ function(input, output, session) {
       arrange(position)
   })
   sim_data_team <- reactive({
+    # progress$set(value = 2)
+    
     if (is.null(v$roster_data)) return()
     espn_sim <- ff_simulate(conn = conn, 
                             n_seasons = input$number_of_seasons, 
@@ -38,9 +40,10 @@ function(input, output, session) {
                             best_ball = T,
                             seed = 4321)
     # v$sim_data <- espn_sim$summary_season
-    
+    # progress$set(value = 3)
     espn_sim$summary_season %>% 
       filter(franchise_name==input$team_name)
+    
   })
   sim_data_week <- reactive({
     if (is.null(v$roster_data)) return()
@@ -57,9 +60,16 @@ function(input, output, session) {
   })
   
   output$plot_expectedwins <- renderPlot({
-    if (is.null(sim_data_team())) return()
+    progress <- Progress$new(session, min=1, max=4)
+    on.exit(progress$close())
     
-    sim_data_team() %>%
+    progress$set(message = 'Running simulation...',
+                 detail = 'this may take a while...')
+    
+    if (is.null(sim_data_team())) return()
+    # progress$set(value = 1)
+    
+    g <- sim_data_team() %>%
       select(franchise_name, h2h_wins) %>%
       ggplot(aes(x=h2h_wins)) +
       geom_histogram(stat="count") +
@@ -70,11 +80,14 @@ function(input, output, session) {
            subtitle = paste("Expected number of wins after simulating ",input$number_of_seasons," ",input$weeks_in_season,"-week seasons.",sep=""),
            caption = paste("ffsimulator R package |",rankings_stamp(today()))) +
       theme_hc()
+    
+    # progress$set(value = 3)
+    return(g)
   })
   
   output$table_roster <- renderDataTable({
     if (is.null(team_data())) return()
-    
+
     datatable(team_data(),
               rownames = FALSE,
               colnames = c("Name", "Team", "Status", "Position", "Eligible Positions"),
@@ -90,6 +103,12 @@ function(input, output, session) {
   })
   
   output$plot_weekly_points <- renderPlot({
+    progress <- Progress$new(session, min=1, max=4)
+    on.exit(progress$close())
+    
+    progress$set(message = 'Running simulation...',
+                 detail = 'this may take a while...')
+    
     if (is.null(sim_data_week())) return()
     
     sim_data_week() %>%
