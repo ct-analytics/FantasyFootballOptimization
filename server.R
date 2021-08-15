@@ -96,7 +96,7 @@ function(input, output, session) {
     
     p3 <- autoplot(df, type = "rank")
     
-    p <- (p1 / p2) + p3
+    p <- (p1 / p2) | p3
     return(p)
   })
 }

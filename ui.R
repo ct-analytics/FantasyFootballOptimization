@@ -39,7 +39,7 @@ navbarPage("Fantasy Football Season Simulator",
                                    tags$h3("Input values"),
                                    sliderInput("number_of_seasons",
                                                label="Number of Simulated Seasons:",
-                                               value=50,
+                                               value=10,
                                                min=10,
                                                max=100,
                                                step=10,
@@ -53,7 +53,7 @@ navbarPage("Fantasy Football Season Simulator",
                                                 step=1) %>% disabled()
                       ),
                       mainPanel(
-                        plotOutput("plot_sim")
+                        plotOutput("plot_sim", height="600px")
                       )
                     )),
            tabPanel("About", 
