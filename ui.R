@@ -1,4 +1,6 @@
+
 navbarPage("Fantasy Football Season Simulator",
+           useShinyjs(),
            tabPanel("Roster Data",
                     fluidPage(theme = shinytheme("flatly")),
                     tags$head(
@@ -9,12 +11,12 @@ navbarPage("Fantasy Football Season Simulator",
                                    selectInput('serviceID', 
                                                label='Select service:',
                                                choices=c("ESPN"),
-                                               selected="ESPN"),
+                                               selected="ESPN") %>% shinyjs::disabled(),
                                    selectInput("yearID", 
                                                label="Year:",
                                                choices=seq(2019,2021),
-                                               selected = c(2021)),
-                                   textInput("leagueID", "League ID:", value="367113688"),
+                                               selected = c(2021)) %>% disabled(),
+                                   textInput("leagueID", "League ID:", value="367113688") %>% disabled(),
                                    actionButton("getData", label = "Get league data", class = "btn-primary"),
                                    selectInput("team_name",
                                                label="Team:",
@@ -47,7 +49,7 @@ navbarPage("Fantasy Football Season Simulator",
                                                 value=14,
                                                 min=10,
                                                 max=16,
-                                                step=1)
+                                                step=1) %>% disabled()
                       ),
                       mainPanel(
                         plotOutput("plot_expectedwins"),
