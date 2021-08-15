@@ -33,7 +33,7 @@ navbarPage("Fantasy Football Season Simulator",
                         )
                       )
                     )),
-           tabPanel("Simulation Data",
+           tabPanel("Simulation",
                     sidebarLayout(
                       sidebarPanel(width = 3,
                                    tags$h3("Input values"),
@@ -56,7 +56,13 @@ navbarPage("Fantasy Football Season Simulator",
                         plotOutput("plot_sim", height="600px")
                       )
                     )),
+           tabPanel("Optimization", 
+                    p("Future version will have an optimization component that will provide suggestions on who and when to pick up players.",style = "font-size:14px")
+           ),
            tabPanel("About", 
-                    p("Test ", a("PES Data Base", href="http://pesdb.net/", target="_blank"),".",style = "font-size:14px"),
+                    p("This app utilizes a lot of work put into packages for scraping and analyzing fantasy football data from multiple providers. This app is still in development and will be updated periodically. For more information, see the ", 
+                      a("github repository",href="#"),
+                      " for this app to review the code and provide issues to fix.", 
+                      style = "font-size:14px")
                     )
 )
