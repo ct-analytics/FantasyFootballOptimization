@@ -1,10 +1,10 @@
 navbarPage("Fantasy Football Season Simulator",
-           tabPanel("Simulated Data",
+           tabPanel("Roster Data",
                     fluidPage(theme = shinytheme("flatly")),
                     tags$head(
                       tags$style(HTML(".shiny-output-error-validation{color: red;}"))),
                     pageWithSidebar(
-                      headerPanel('Apply filters'),
+                      tags$h3("Input Values"),
                       sidebarPanel(width = 3,
                                    selectInput('serviceID', 
                                                label='Select service:',
@@ -25,9 +25,30 @@ navbarPage("Fantasy Football Season Simulator",
                       ),
                       mainPanel(
                         column(12, 
-                               plotOutput("plot_expectedwins"),
+                               # plotOutput("plot_expectedwins"),
                                dataTableOutput("table_roster")
                         )
+                      )
+                    )),
+           tabPanel("Simulation Data",
+                    sidebarLayout(
+                      sidebarPanel(width = 3,
+                                   tags$h3("Input values"),
+                                   numericInput("number_of_seasons",
+                                                label="Number of Simulated Seasons:",
+                                                value=10,
+                                                min=1,
+                                                max=100,
+                                                step=10),
+                                   numericInput("weeks_in_season",
+                                                label="Number of Weeks to Simulate:",
+                                                value=14,
+                                                min=10,
+                                                max=16,
+                                                step=1)
+                      ),
+                      mainPanel(
+                        plotOutput("plot_expectedwins")
                       )
                     )),
            tabPanel("About", 

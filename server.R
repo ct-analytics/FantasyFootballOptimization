@@ -1,7 +1,7 @@
 
 function(input, output, session) {
-  number_of_seasons <- 10
-  weeks_in_season <- 14
+  # number_of_seasons <- 10
+  # weeks_in_season <- 14
 
   rankings_stamp <- stamp("Based on Rankings as of Jan 1, 1999")
   
@@ -24,7 +24,7 @@ function(input, output, session) {
     # })
     
     conn <- espn_connect(input$yearID, input$leagueID)
-    espn_sim <- ff_simulate(conn = conn, n_seasons = number_of_seasons, n_weeks = weeks_in_season)
+    espn_sim <- ff_simulate(conn = conn, n_seasons = number_of_seasons, n_weeks = input$weeks_in_season)
     v$sim_data <- espn_sim$summary_season
 
     v$roster_data <- ffs_rosters(conn)
@@ -75,7 +75,7 @@ function(input, output, session) {
       xlab("Head to Head Wins in a Season") +
       ylab("Number of Simulated Seasons") +
       labs(title = paste("Season win totals for",input$team_name),
-           subtitle = paste("Expected number of wins after simulating ",number_of_seasons," ",weeks_in_season,"-week seasons.",sep=""),
+           subtitle = paste("Expected number of wins after simulating ",input$number_of_seasons," ",input$weeks_in_season,"-week seasons.",sep=""),
            caption = paste("ffsimulator R package |",rankings_stamp(today()))) +
       theme_hc()
   })
