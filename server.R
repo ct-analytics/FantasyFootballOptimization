@@ -31,10 +31,28 @@ function(input, output, session) {
   })
   sim_data_team <- reactive({
     if (is.null(v$roster_data)) return()
-    espn_sim <- ff_simulate(conn = conn, n_seasons = input$number_of_seasons, n_weeks = input$weeks_in_season)
+    espn_sim <- ff_simulate(conn = conn, 
+                            n_seasons = input$number_of_seasons, 
+                            n_weeks = input$weeks_in_season,
+                            injury_model = "simple",
+                            best_ball = T,
+                            seed = 4321)
     # v$sim_data <- espn_sim$summary_season
     
     espn_sim$summary_season %>% 
+      filter(franchise_name==input$team_name)
+  })
+  sim_data_week <- reactive({
+    if (is.null(v$roster_data)) return()
+    espn_sim <- ff_simulate(conn = conn, 
+                            n_seasons = input$number_of_seasons, 
+                            n_weeks = input$weeks_in_season,
+                            injury_model = "simple",
+                            best_ball = T,
+                            seed = 4321)
+    # v$sim_data <- espn_sim$summary_season
+    
+    espn_sim$summary_week %>% 
       filter(franchise_name==input$team_name)
   })
   
@@ -69,5 +87,22 @@ function(input, output, session) {
                              info=F,
                              paging=F)
     )
+  })
+  
+  output$plot_weekly_points <- renderPlot({
+    if (is.null(sim_data_week())) return()
+    
+    sim_data_week() %>%
+      select(franchise_name,team_score,result) %>%
+      ggplot(aes(y=result, x=team_score, fill=result, color=result)) +
+      geom_jitter(color="black", size=2, alpha=0.2) +
+      geom_violin(alpha=0.75) +
+      xlab("Simulated Team Score per Week") +
+      ylab("Weekly Result") +
+      labs(title = paste("Weekly point totals for",input$team_name),
+           subtitle = paste("Expected weekly point total after simulating ",input$number_of_seasons," ",input$weeks_in_season,"-week seasons.",sep=""),
+           caption = paste("ffsimulator R package |",rankings_stamp(today()))) +
+      theme_hc() +
+      theme(legend.position = "none")
   })
 }
