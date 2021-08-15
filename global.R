@@ -1,6 +1,6 @@
 # Used packages
 pacotes = c("shiny", "shinydashboard", "shinythemes", "ffsimulator", "ggplot2", "ggthemes",
-            "lubridate", "ffscrapr", "DT", "dplyr")
+            "lubridate", "ffscrapr", "DT", "dplyr", 'shinyjs')
 
 # Run the following command to verify that the required packages are installed. If some package
 # is missing, it will be installed automatically
