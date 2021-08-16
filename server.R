@@ -36,6 +36,8 @@ function(input, output, session) {
     progress$set(message = 'Running simulation...',
                  detail = 'this may take a while...')
     
+    conn <- espn_connect(input$yearID, input$leagueID)
+    
     if (is.null(v$roster_data)) return()
     ff_simulate(conn = conn, 
                 n_seasons = input$number_of_seasons, 
