@@ -1,5 +1,6 @@
 
-navbarPage("Fantasy Football Season Simulator",
+navbarPage(title=div(img(src="icon.png",style="margin-top: -14px; padding-right:10px;padding-bottom:10px",height=50),"Fantasy Football Season Simulator"),
+           windowTitle = "Fantasy Football Season Simulator",
            
            tabPanel("Roster Data",
                     fluidPage(theme = shinytheme("flatly"),
