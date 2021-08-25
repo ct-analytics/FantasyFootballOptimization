@@ -3,7 +3,7 @@ ui <-
              windowTitle = "Fantasy Football Season Simulator",
              
              tabPanel("Roster Data",
-                      fluidPage(theme = shinytheme("flatly"),
+                      fluidPage(theme = theme_ct,
                                 useShinyjs()),
                       tags$head(
                         tags$style(HTML(".shiny-output-error-validation{color: red;}"))),
@@ -149,8 +149,7 @@ server <-
         ylab("Number of Simulated Seasons") +
         labs(title = paste("Season win totals for",input$team_name),
              subtitle = paste("Expected number of wins after simulating ",input$number_of_seasons," ",input$weeks_in_season,"-week seasons.",sep=""),
-             caption = paste("ffsimulator R package |",rankings_stamp(today()))) +
-        theme_hc()
+             caption = paste("ffsimulator R package |",rankings_stamp(today()))) 
       
       p2 <- df$summary_week %>%
         filter(franchise_name==input$team_name) %>%
@@ -162,8 +161,7 @@ server <-
         ylab("Weekly Result") +
         labs(title = paste("Weekly point totals for",input$team_name),
              subtitle = paste("Expected weekly point total after simulating ",input$number_of_seasons," ",input$weeks_in_season,"-week seasons.",sep=""),
-             caption = paste("ffsimulator R package |",rankings_stamp(today()))) +
-        theme_hc() +
+             caption = paste("ffsimulator R package |",rankings_stamp(today()))) 
         theme(legend.position = "none")
       
       p3 <- autoplot(df, type = "rank")
