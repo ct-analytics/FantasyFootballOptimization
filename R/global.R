@@ -10,7 +10,9 @@ packages <- c("shiny",
               "DT", 
               "dplyr", 
               'shinyjs', 
-              "patchwork")
+              "patchwork",
+              "bslib",
+              "thematic")
 
 # Run the following command to verify that the required packages are installed. If some package
 # is missing, it will be installed automatically
