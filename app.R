@@ -20,11 +20,12 @@ ui <-
                                                  choices=seq(2019,2021),
                                                  selected = c(2021)) %>% disabled(),
                                      textInput("leagueID", "League ID:", value="367113688") %>% disabled(),
-                                     actionButton("getData", label = "Get league data", class = "btn-primary"),
                                      selectInput("team_name",
                                                  label="Team:",
                                                  choices=c(""),
-                                                 selected="")
+                                                 selected="") %>% shinyjs::disabled(),
+                                     actionButton("getData", label = "Get league data", class = "btn-primary")
+                                     
                                      
                                      # actionButton("getTeam", label = "Get team results", class = "btn-primary")
                         ),
@@ -79,6 +80,8 @@ server <-
       
       v$roster_data <- ffs_rosters(conn)
       v$roster_data$position <- factor(v$roster_data$pos, levels=c("QB","RB","WR","TE","DST","K"))
+      
+      shinyjs::enable("team_name")
       
       updateSelectInput(session, "team_name",
                         label = "Team:",
