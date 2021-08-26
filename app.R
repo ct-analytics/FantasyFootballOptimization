@@ -1,5 +1,6 @@
 ui <- 
-  navbarPage(title=div(img(src="icon.png",style="margin-top: -14px; padding-right:10px;padding-bottom:10px",height=50),"Fantasy Football Season Simulator"),
+  navbarPage(title=div(a(href="shiny.christopherteixeira.com",img(src="icon.png",style="margin-top: 0px; padding-right:0px;padding-bottom:0px",height=75)),
+                       "Fantasy Football Season Simulator"),
              windowTitle = "Fantasy Football Season Simulator",
              
              tabPanel("Roster Data",
