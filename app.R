@@ -1,5 +1,5 @@
 ui <- 
-  navbarPage(title=div(a(href="https://shiny.christopherteixeira.com",img(src="logo-high-transparent.png",style="margin-top: 0px; padding-right:0px;padding-bottom:0px",height=75)),
+  navbarPage(title=div(a(href="https://shiny.christopherteixeira.com",img(src="logo-high-transparent.png",height=50)),
                        "Fantasy Football Season Simulator"),
              windowTitle = "Fantasy Football Season Simulator",
              
